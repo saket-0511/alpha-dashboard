@@ -1,0 +1,116 @@
+.detail-page { padding: 28px; display: flex; flex-direction: column; gap: 24px; max-width: 1100px; }
+
+.back-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: 1px solid var(--border);
+  color: var(--text2); padding: 7px 14px; border-radius: 8px;
+  font-size: 13px; font-weight: 500; width: fit-content;
+  transition: all 0.15s; animation: fadeUp 0.3s ease both;
+}
+.back-btn:hover { border-color: var(--border2); color: var(--text); background: var(--bg3); }
+
+.detail-layout {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 40px; animation: fadeUp 0.35s ease 0.05s both;
+}
+
+/* Carousel */
+.carousel-section { display: flex; flex-direction: column; gap: 12px; }
+
+.carousel-main {
+  position: relative; aspect-ratio: 1;
+  background: var(--bg2); border-radius: 14px;
+  border: 1px solid var(--border); overflow: hidden;
+}
+
+.carousel-img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: opacity 0.2s;
+}
+
+.carousel-btn {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(10,10,15,0.7); border: 1px solid var(--border);
+  color: var(--text); width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; backdrop-filter: blur(4px);
+}
+.carousel-btn:hover { background: var(--bg2); }
+.carousel-btn--left { left: 12px; }
+.carousel-btn--right { right: 12px; }
+
+.carousel-dots {
+  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px;
+}
+.dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.3); border: none; padding: 0;
+  transition: all 0.15s;
+}
+.dot.active { background: var(--accent2); width: 18px; border-radius: 3px; }
+
+.carousel-thumbs { display: flex; gap: 8px; flex-wrap: wrap; }
+.thumb {
+  width: 60px; height: 60px; border-radius: 8px; overflow: hidden;
+  border: 2px solid var(--border); background: none; padding: 0;
+  transition: all 0.15s; flex-shrink: 0; cursor: pointer;
+}
+.thumb:hover { border-color: var(--border2); }
+.thumb.active { border-color: var(--accent); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Info */
+.detail-info { display: flex; flex-direction: column; gap: 16px; }
+
+.detail-cat {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600; color: var(--accent2);
+  text-transform: capitalize; text-transform: uppercase; letter-spacing: 0.06em;
+}
+
+.detail-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.15; }
+.detail-brand { font-size: 13px; color: var(--text3); }
+
+.detail-rating { display: flex; align-items: center; gap: 8px; }
+.big-stars { color: var(--yellow); font-size: 18px; letter-spacing: 1px; }
+.rating-val { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 600; color: var(--text2); }
+
+.price-section { display: flex; align-items: center; gap: 10px; }
+.detail-price { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: var(--green); }
+.original-price { font-size: 16px; color: var(--text3); text-decoration: line-through; }
+.discount-badge {
+  background: var(--red-dim); color: var(--red); border: 1px solid var(--red);
+  padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 700;
+}
+
+.detail-desc { font-size: 14px; color: var(--text2); line-height: 1.65; }
+
+.detail-stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+.detail-stat {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px;
+  display: flex; align-items: flex-start; gap: 10px;
+  color: var(--text3);
+}
+.ds-label { font-size: 11px; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+.ds-val { font-size: 15px; font-weight: 700; color: var(--text); margin-top: 2px; }
+.ds-val.green { color: var(--green); }
+.ds-val.yellow { color: var(--yellow); }
+.ds-val.red { color: var(--red); }
+
+.detail-actions { display: flex; gap: 10px; margin-top: 4px; }
+.btn-secondary {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text2); padding: 9px 16px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; transition: all 0.15s;
+}
+.btn-secondary:hover { border-color: var(--border2); color: var(--text); }
+
+@media (max-width: 800px) {
+  .detail-layout { grid-template-columns: 1fr; }
+  .detail-page { padding: 16px; }
+  .detail-title { font-size: 22px; }
+}
