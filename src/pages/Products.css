@@ -163,3 +163,17 @@
   .products-table td:nth-child(4) { display: none; }
   .product-name { max-width: 120px; }
 }
+
+.publish-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; border: 1px solid;
+  transition: all 0.15s; white-space: nowrap;
+}
+.publish-btn.published { background: var(--green-dim); color: var(--green); border-color: rgba(62,207,142,0.4); }
+.publish-btn.published:hover { background: var(--red-dim); color: var(--red); border-color: var(--red); }
+.publish-btn.hidden-prod { background: var(--bg3); color: var(--text3); border-color: var(--border); }
+.publish-btn.hidden-prod:hover { background: var(--green-dim); color: var(--green); border-color: var(--green); }
+
+.unpublished-row { opacity: 0.55; }
+.actions-cell { white-space: nowrap; }

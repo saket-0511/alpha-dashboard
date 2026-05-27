@@ -145,3 +145,21 @@
   }
   .sidebar.collapsed { transform: translateX(-100%); width: var(--sidebar-w); }
 }
+
+.role-badge-wrap { padding: 8px 12px 0; }
+.role-badge {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+}
+.role-badge.admin { background: var(--accent-dim); color: var(--accent2); border: 1px solid rgba(124,106,245,0.3); }
+.role-badge.user { background: var(--green-dim); color: var(--green); border: 1px solid rgba(62,207,142,0.3); }
+
+.logout-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: none; border: 1px solid var(--border);
+  color: var(--text3); padding: 7px 10px; border-radius: 8px;
+  font-size: 12px; font-weight: 500; width: 100%;
+  margin-top: 8px; transition: all 0.15s;
+}
+.logout-btn:hover { background: var(--red-dim); color: var(--red); border-color: var(--red); }

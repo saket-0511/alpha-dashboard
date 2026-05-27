@@ -1,8 +1,10 @@
 import React, { useMemo, useCallback, useState, useEffect, memo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Search, SlidersHorizontal, Star, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Eye, LayoutGrid, List } from 'lucide-react';
+import { Search, SlidersHorizontal, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Eye, LayoutGrid, List, Globe, EyeOff } from 'lucide-react';
 import { useProducts, useDebounce } from '../hooks/useProducts';
 import { Product, SortField, SortOrder } from '../types';
+import { useAuth } from '../context/AuthContext';
+import { usePublished } from '../context/PublishedContext';
 import './Products.css';
 
 const PAGE_SIZE = 12;
@@ -20,8 +22,12 @@ const Stars = memo(({ rating }: { rating: number }) => (
   </span>
 ));
 
-const ProductRow = memo(({ product, onClick }: { product: Product; onClick: () => void }) => (
-  <tr className="product-row" onClick={onClick}>
+const ProductRow = memo(({ product, onClick, isAdmin, published, onTogglePublish }: {
+  product: Product; onClick: () => void;
+  isAdmin: boolean; published: boolean;
+  onTogglePublish: (e: React.MouseEvent) => void;
+}) => (
+  <tr className={`product-row ${!published && isAdmin ? 'unpublished-row' : ''}`} onClick={onClick}>
     <td>
       <div className="product-cell">
         <img src={product.thumbnail} alt={product.title} loading="lazy" />
@@ -35,9 +41,20 @@ const ProductRow = memo(({ product, onClick }: { product: Product; onClick: () =
     <td className="price-cell">${product.price}</td>
     <td><StockBadge stock={product.stock} /></td>
     <td><Stars rating={product.rating} /></td>
-    <td>
+    <td className="actions-cell">
       <button className="view-btn"><Eye size={13} /> View</button>
     </td>
+    {isAdmin && (
+      <td onClick={e => e.stopPropagation()}>
+        <button
+          className={`publish-btn ${published ? 'published' : 'hidden-prod'}`}
+          onClick={onTogglePublish}
+          title={published ? 'Click to hide from users' : 'Click to publish'}
+        >
+          {published ? <><Globe size={12} /> Published</> : <><EyeOff size={12} /> Hidden</>}
+        </button>
+      </td>
+    )}
   </tr>
 ));
 
@@ -60,6 +77,9 @@ export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { allProducts, loading } = useProducts();
+  const { user } = useAuth();
+  const { isPublished, togglePublished } = usePublished();
+  const isAdmin = user?.role === 'admin';
 
   // URL state
   const searchRaw = searchParams.get('search') || '';
@@ -126,6 +146,8 @@ export default function Products() {
 
   const filtered = useMemo(() => {
     let result = allProducts;
+    // Non-admin users only see published products
+    if (!isAdmin) result = result.filter(p => isPublished(p.id));
     const q = debouncedSearch.toLowerCase();
     if (q) result = result.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || p.brand?.toLowerCase().includes(q));
     if (selectedCategories.length) result = result.filter(p => selectedCategories.includes(p.category));
@@ -211,11 +233,19 @@ export default function Products() {
                 <th>Stock</th>
                 <th onClick={() => setSort('rating')} className="sortable">Rating <SortIcon field="rating" /></th>
                 <th></th>
+                {isAdmin && <th>Published</th>}
               </tr>
             </thead>
             <tbody>
               {paginated.map(p => (
-                <ProductRow key={p.id} product={p} onClick={() => navigate(`/products/${p.id}`)} />
+                <ProductRow
+                  key={p.id}
+                  product={p}
+                  onClick={() => navigate(`/products/${p.id}`)}
+                  isAdmin={isAdmin}
+                  published={isPublished(p.id)}
+                  onTogglePublish={() => togglePublished(p.id)}
+                />
               ))}
             </tbody>
           </table>

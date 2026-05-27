@@ -1,7 +1,10 @@
 import React, { Suspense, lazy, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { PublishedProvider } from './context/PublishedContext';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
+import Login from './pages/Login';
 import './App.css';
 
 const Overview = lazy(() => import('./pages/Overview'));
@@ -11,16 +14,21 @@ const Analytics = lazy(() => import('./pages/Analytics'));
 const Settings = lazy(() => import('./pages/Settings'));
 
 function PageLoader() {
-  return (
-    <div className="page-loading">
-      <div className="spinner" />
-      <span>Loading…</span>
-    </div>
-  );
+  return <div className="page-loading"><div className="spinner" /><span>Loading…</span></div>;
 }
 
-function Layout() {
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  if (user?.role !== 'admin') return <Navigate to="/products" replace />;
+  return <>{children}</>;
+}
+
+function AppShell() {
+  const { user } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  if (!user) return <Login />;
+
   return (
     <div className="app-shell">
       <Sidebar />
@@ -30,11 +38,18 @@ function Layout() {
         <main className="main-content">
           <Suspense fallback={<PageLoader />}>
             <Routes>
-              <Route path="/" element={<Overview />} />
+              <Route path="/" element={
+                <AdminRoute><Overview /></AdminRoute>
+              } />
               <Route path="/products" element={<Products />} />
               <Route path="/products/:id" element={<ProductDetail />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/settings" element={<Settings />} />
+              <Route path="/analytics" element={
+                <AdminRoute><Analytics /></AdminRoute>
+              } />
+              <Route path="/settings" element={
+                <AdminRoute><Settings /></AdminRoute>
+              } />
+              <Route path="*" element={<Navigate to="/products" replace />} />
             </Routes>
           </Suspense>
         </main>
@@ -46,7 +61,11 @@ function Layout() {
 export default function App() {
   return (
     <BrowserRouter>
-      <Layout />
+      <AuthProvider>
+        <PublishedProvider>
+          <AppShell />
+        </PublishedProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
